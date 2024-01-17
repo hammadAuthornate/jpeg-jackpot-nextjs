@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "firebase-functions/functions/sendJackpotToWinner2.js", "firebase-functions/functions/pickWinner.js", "firebase-functions/functions/getTokenHash.js", "firebase-functions/functions/getTokenAddressString.js", "firebase-functions/functions/getPrivateKey.js", "firebase-functions/functions/getPricesFromFirestore.js", "firebase-functions/functions/getPolygonGasPrice.js", "firebase-functions/functions/startJackpotTimer.js", "firebase-functions/main/betNft2.js", "firebase-functions/main/addUserAuthData.js", "firebase-functions/main/depositListener.js", "firebase-functions/main/updateFloorPrice.js", "firebase-functions/main/removeNftFromJackpot.js", "firebase-functions/main/getFloorPrice.js", "firebase-functions/main/getEthPrice.js", "firebase-functions/main/withdrawNft.js"],
+  "exclude": ["node_modules"]
+}
