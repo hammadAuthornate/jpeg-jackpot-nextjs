@@ -1,5 +1,21 @@
 interface nftDetails {
-  image?: string;
+  image?: {
+    cachedUrl?: string;
+    contentType?: string;
+    originalUrl?: string;
+  };
+  contract?: {
+    address?: string;
+    contractDeployer?: string;
+    openSeaMetadata?: {
+      description?: string;
+      floorPrice?: number;
+    };
+  };
+  collection?: {
+    name?: string;
+    slug?: string;
+  };
   name?: string;
   name2?: string;
   meta_name?: string;
@@ -10,10 +26,18 @@ interface nftDetails {
   contractType?: string;
   amount?: number;
   description?: string;
-  token_uri?: string;
+  tokenUri?: string;
   floor_price?: number;
   current_owner?: string;
   in_pot?: boolean;
+  raw?: {
+    metadata?: {
+      attributes?: {
+        trait_type?: string;
+        value?: string;
+      }[];
+    };
+  };
   attributes?: {
     trait_type?: string;
     value?: string;

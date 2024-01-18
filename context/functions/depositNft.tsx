@@ -29,7 +29,7 @@ export async function depositNft({ nft }: { nft: nftDetails }) {
   const whitelist = await getWhitelist();
   const token_address = getTokenAddressString(nft);
 
-  if (whitelist![token_address] != undefined) {
+  if (whitelist![token_address || ""] != undefined) {
     const gasPrice = await getPolygonGasPrice("fast");
     const gasLimit = 1000000;
 

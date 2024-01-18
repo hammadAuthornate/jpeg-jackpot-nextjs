@@ -9,7 +9,7 @@ import { getWhitelistedUserNfts } from "@/context/functions/getWhitelistedUserNf
 import { setupInventoryListener } from "@/context/functions/setupInventoryListener";
 import { updateCurrentWalletAddress } from "@/context/functions/updateCurrentWalletAddress";
 import { useStore } from "@/store/store";
-import { EvmAddress, EvmChain } from "@moralisweb3/common-evm-utils";
+// import { EvmAddress, EvmChain } from "@moralisweb3/common-evm-utils";
 import {
   useWeb3ModalAccount,
   useWeb3ModalProvider,
@@ -23,8 +23,8 @@ import {
   onSnapshot,
   query,
 } from "firebase/firestore";
-import Moralis from "moralis";
-import { useEffect } from "react";
+// import Moralis from "moralis";
+import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useShallow } from "zustand/react/shallow";
@@ -39,6 +39,9 @@ import CurrentPotDetails from "./components/Tab/CurrentPotDetails";
 import FirebaseUserWallet from "./components/Tab/FirebaseUserWallet";
 import MoralisUserWallet from "./components/Tab/MoralisUserWallet";
 import Tabs from "./components/Tab/Tabs";
+import { Web3 } from "web3";
+import ABI from "@/contract/ERC721.json";
+import { Alchemy } from "alchemy-sdk";
 
 export default function Home() {
   const { walletProvider, walletProviderType } = useWeb3ModalProvider();
@@ -115,6 +118,10 @@ export default function Home() {
 
   //setting web3 instance to state
   useEffect(() => {
+    if (address) {
+      console.log(`current user address ${address}`);
+      setWalletAddress(address);
+    }
     // async function getSigner() {
     //   const provider = new ethers.providers.Web3Provider(window.ethereum!);
     //   await provider.send("eth_requestAccounts", []);
@@ -144,7 +151,15 @@ export default function Home() {
 
   //NFTS & FLOOR PRICE
   //start moralis and get NFTs from user wallet
+  const [web3Client, setWeb3Client] = useState<any>(null);
   useEffect(() => {
+    if (!web3Client) {
+      const api_key = process.env.NEXT_PUBLIC_INFURA_WEB3_API_KEY;
+      const rpcURL = `https://mainnet.infura.io/v3/${api_key}`;
+      const web3 = new Web3(rpcURL);
+      setWeb3Client(web3);
+    }
+    fetchMoralisData();
     // const startMoralis = async () => {
     //   if (!Moralis.Core.isStarted) {
     //     Moralis.Auth.setup();
@@ -159,33 +174,50 @@ export default function Home() {
     //   }
     // };
     // startMoralis();
-    fetch("/");
   }, []);
 
-  useEffect(() => {
-    const fetchMoralisData = async () => {
-      if (moralisAuthAddress) {
-        try {
-          const userAddress = await walletAddress?.toString();
-          // const vaultAddress = await vaultWallet;
-          const chain = EvmChain.POLYGON;
-          const userNftResponse = await Moralis.EvmApi.nft.getWalletNFTs({
-            address: userAddress!,
-            chain,
-          });
-          //get whitelisted nft list for display
-          const whitelistedUserNfts = await getWhitelistedUserNfts(
-            userNftResponse?.result
-          );
-          setMoralisUserNfts(whitelistedUserNfts!);
-        } catch (e) {
-          console.log("error fetching data");
-          console.error(e);
-        }
-      }
-    };
-    fetchMoralisData();
-  }, [moralisAuthAddress]); //adjust this so it updates everytime page loads? or update without refresh but with counter instead?
+  const fetchMoralisData = async () => {
+    try {
+      const userAddress = await walletAddress?.toString();
+      const alchemy = new Alchemy();
+      const userNftResponse = await alchemy.nft.getNftsForOwner(
+        address as string
+        // "0x26195376410c52c9622037250d070a19ef04e513"  //////this wallet address is only for checking purposes
+      );
+      console.log("user wallet nfts");
+      console.log(userNftResponse);
+      userNftResponse?.ownedNfts?.map((NFT) => {
+        console.log(NFT.contract.openSeaMetadata.floorPrice);
+      });
+      //@ts-ignore
+      setMoralisUserNfts(userNftResponse?.ownedNfts);
+      // const vaultAddress = process.env.NEXT_PUBLIC_VAULT_ADDRESS;
+      // const contract = new web3Client.eth.Contract(ABI, vaultAddress);
+      // const userNftResponse = await contract.methods
+      //   .balanceOf(walletAddress)
+      //   .call();
+      // console.log(`wallet response ${userNftResponse}`);
+
+      // const vaultAddress = await vaultWallet;
+      // const chain = EvmChain.POLYGON;
+      // const userNftResponse = await Moralis.EvmApi.nft.getWalletNFTs({
+      //   address: userAddress!,
+      //   chain,
+      // });
+      //get whitelisted nft list for display
+
+      // const whitelistedUserNfts = await getWhitelistedUserNfts(
+      //   userNftResponse.ownedNfts
+      // );
+      // setMoralisUserNfts(whitelistedUserNfts!);
+    } catch (e) {
+      console.log("error fetching data");
+      console.error(e);
+    }
+  };
+  // useEffect(() => {
+  //   fetchMoralisData();
+  // }, [moralisAuthAddress]); //adjust this so it updates everytime page loads? or update without refresh but with counter instead?
 
   //set up eth and collection price listeners on mount, clean up on unmount
   useEffect(() => {
@@ -197,8 +229,8 @@ export default function Home() {
     );
     // Clean up function
     return () => {
-      unsubscribeEthPrice();
-      unsubscribeCollectionPrice();
+      // unsubscribeEthPrice();
+      // unsubscribeCollectionPrice();
     };
   }, []);
 

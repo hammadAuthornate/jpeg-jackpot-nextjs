@@ -15,15 +15,23 @@ export function collectionPriceListener(
     "collections",
     "the-croak" //change this to relevant collection name
   );
-  const unsubscribe = onSnapshot(collectionPriceRef, (doc) => {
-    const newFloorPrice = doc.data()?.floor_price;
+  if (moralisUserNfts.length > 0) {
+    updateNfts(
+      moralisUserNfts,
+      setMoralisUserNfts,
+      0, // TODO: replace with actual FLoor price
+      ethPrice
+    );
+  }
+  // const unsubscribe = onSnapshot(collectionPriceRef, (doc) => {
+  //   const newFloorPrice = doc.data()?.floor_price;
 
-    if (moralisUserNfts.length > 0) {
-      updateNfts(moralisUserNfts, setMoralisUserNfts, newFloorPrice, ethPrice);
-    }
-  });
+  //   if (moralisUserNfts.length > 0) {
+  //     updateNfts(moralisUserNfts, setMoralisUserNfts, newFloorPrice, ethPrice);
+  //   }
+  // });
 
-  return () => {
-    unsubscribe();
-  };
+  // return () => {
+  //   unsubscribe();
+  // };
 }

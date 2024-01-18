@@ -5,7 +5,6 @@ import { signInWithMoralis } from "@moralisweb3/client-firebase-evm-auth";
 
 // update current user inventory and user auth when user changes wallet in metamask
 export const updateCurrentWalletAddress = async (
-  login: () => void,
   setFirebaseUserNfts: (value: any) => void,
   setMoralisAuthAddress: (value: any) => void,
   setWalletAddress: (value: any) => void,
@@ -18,7 +17,7 @@ export const updateCurrentWalletAddress = async (
     setFirebaseUserNfts([]);
     setWalletAddress(lowercaseUserAddress || "");
     let isUserLoggedIn = false;
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
       const authedUser = user?.displayName?.toLowerCase();
       if (
         authedUser &&
@@ -30,18 +29,22 @@ export const updateCurrentWalletAddress = async (
       } else if (!isUserLoggedIn) {
         console.log("logging in...");
         // login();
-        const res = await signInWithMoralis(moralisAuth);
-        console.log(
-          "logging you in... USER: " +
-            res.credentials.user.uid +
-            ", " +
-            res.credentials.user.displayName
-        );
-        setMoralisAuthAddress(
-          res?.credentials?.user?.displayName?.toLowerCase()
-        );
+        login(setMoralisAuthAddress);
+
         isUserLoggedIn = true;
       }
     });
   }
 };
+
+async function login(setMoralisAuthAddress: (value: any) => void) {
+  // const res = await signInWithMoralis(moralisAuth);
+  // console.log(
+  //   "logging you in... USER: " +
+  //     res.credentials.user.uid +
+  //     ", " +
+  //     res.credentials.user.displayName
+  // );
+  // setMoralisAuthAddress(res?.credentials?.user?.displayName?.toLowerCase());
+  // return res;
+}

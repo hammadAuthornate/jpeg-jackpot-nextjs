@@ -15,7 +15,7 @@ export const getWhitelistedUserNfts = async (nfts: any[]) => {
       const collection = collectionData.find(
         (c) => c.contractAddress === token_address
       );
-      const whitelistedItem = whitelist![token_address];
+      const whitelistedItem = whitelist![token_address || ""];
 
       if (!whitelistedItem || !collection) return false;
 
