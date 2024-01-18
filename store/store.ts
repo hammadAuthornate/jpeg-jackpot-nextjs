@@ -74,9 +74,6 @@ export interface StoreInterface {
   provider: any | null;
   setProvider: (value: any) => void;
 
-  login: () => void;
-  logout: () => void;
-
   userSigner: any;
   setUserSigner: (value: any) => void;
 
@@ -184,24 +181,6 @@ export function initializeStore() {
 
     provider: null,
     setProvider: (value: any) => set((state) => ({ provider: value })),
-
-    login: async () => {
-      const res = await signInWithMoralis(moralisAuth);
-      console.log(
-        "logging you in... USER: " +
-          res.credentials.user.uid +
-          ", " +
-          res.credentials.user.displayName
-      );
-      set((state) => ({
-        MoralisAuthAddress: res?.credentials?.user?.displayName?.toLowerCase(),
-      }));
-    },
-    logout: async () => {
-      await auth.signOut();
-      console.log("logging you out... USER: " + get().MoralisAuthAddress);
-      set((state) => ({ user: null }));
-    },
 
     userSigner: "",
     setUserSigner: (value: any) => set((state) => ({ userSigner: value })),

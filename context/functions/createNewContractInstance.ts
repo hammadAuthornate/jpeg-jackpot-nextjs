@@ -3,7 +3,7 @@
 import { ethers } from "ethers";
 import { getTokenAddressString } from "./getTokenAddressString";
 import { JPEG_ABI_ERC721, ABI_ERC1155 } from "@/contract/index";
-import { vaultWallet } from "../Firebase";
+// import { vaultWallet } from "../Firebase";
 
 //creates contract with signer for executing deposit on chain
 export async function createNewContractInstance(
@@ -16,6 +16,7 @@ export async function createNewContractInstance(
 
   //get user wallet as signer for nft contract instance. if isVaultSigner is passed as parameter, sign with vaultSigner
   let signer = "";
+  const vaultWallet = process.env.NEXT_PUBLIC_VAULT_ADDRESS || "";
   isVaultSigner ? (signer = vaultWallet) : (signer = userSigner);
 
   //create nft contract instance, signed by user wallet

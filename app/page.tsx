@@ -1,5 +1,5 @@
 "use client";
-import { db, vaultWallet } from "@/context/Firebase";
+import { db } from "@/context/Firebase";
 import { playSound, soundsLibrary } from "@/context/SoundLibrary";
 import { collectionPriceListener } from "@/context/functions/collectionPriceListener";
 import { ethPriceListener } from "@/context/functions/ethPriceListener";
@@ -54,7 +54,6 @@ export default function Home() {
     setProvider,
     setPotValue,
     provider,
-    login,
     setFirebaseUserNfts,
     setMoralisAuthAddress,
     setWalletAddress,
@@ -85,7 +84,6 @@ export default function Home() {
       setProvider: store.setProvider,
       setPotValue: store.setPotValue,
       provider: store.provider,
-      login: store.login,
       setFirebaseUserNfts: store.setFirebaseUserNfts,
       setMoralisAuthAddress: store.setMoralisAuthAddress,
       setWalletAddress: store.setWalletAddress,
@@ -136,7 +134,6 @@ export default function Home() {
   // set listener for changes to wallet address
   useEffect(() => {
     updateCurrentWalletAddress(
-      login,
       setFirebaseUserNfts,
       setMoralisAuthAddress,
       setWalletAddress,
@@ -148,15 +145,21 @@ export default function Home() {
   //NFTS & FLOOR PRICE
   //start moralis and get NFTs from user wallet
   useEffect(() => {
-    const startMoralis = async () => {
-      if (!Moralis.Core.isStarted) {
-        await Moralis.start({
-          apiKey: process.env.MORALIS_API,
-          // ...and any other configuration
-        });
-      }
-    };
-    startMoralis();
+    // const startMoralis = async () => {
+    //   if (!Moralis.Core.isStarted) {
+    //     Moralis.Auth.setup();
+    //     await Moralis.start({
+    //       apiKey: process.env.NEXT_PUBLIC_MORALIS_API,
+    //       // buidEnvironment: "browser",
+    //       maxRetries: 5,
+    //       // ...and any other configuration
+    //     })
+    //       .then((data) => console.log(data))
+    //       .catch((error) => console.log(error));
+    //   }
+    // };
+    // startMoralis();
+    fetch("/");
   }, []);
 
   useEffect(() => {
@@ -164,7 +167,7 @@ export default function Home() {
       if (moralisAuthAddress) {
         try {
           const userAddress = await walletAddress?.toString();
-          const vaultAddress = await vaultWallet;
+          // const vaultAddress = await vaultWallet;
           const chain = EvmChain.POLYGON;
           const userNftResponse = await Moralis.EvmApi.nft.getWalletNFTs({
             address: userAddress!,

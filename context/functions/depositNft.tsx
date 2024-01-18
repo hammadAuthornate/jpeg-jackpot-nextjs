@@ -7,7 +7,7 @@ import { getTokenAddressString } from "./getTokenAddressString";
 import { getWhitelist } from "./getWhitelist";
 import { getPolygonGasPrice } from "./getPolygonGasPrice";
 import { createNewContractInstance } from "./createNewContractInstance";
-import { vaultWallet } from "../Firebase";
+// import { vaultWallet } from "../Firebase";
 import { useStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
 
@@ -23,6 +23,8 @@ export async function depositNft({ nft }: { nft: nftDetails }) {
         userSigner: store.userSigner,
       }))
     );
+  const vaultWallet = process.env.NEXT_PUBLIC_VAULT_ADDRESS || "";
+
   playSound(soundsLibrary["on_click_deposit"]);
   const whitelist = await getWhitelist();
   const token_address = getTokenAddressString(nft);
