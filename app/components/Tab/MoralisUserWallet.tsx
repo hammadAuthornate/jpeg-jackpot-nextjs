@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import { playSound, soundsLibrary } from "@/context/SoundLibrary";
 import { useStore } from "@/store/store";
 import { useShallow } from "zustand/react/shallow";
@@ -13,7 +13,6 @@ export default function MoralisUserWallet() {
       setHoveredNft: store.setHoveredNft,
     }))
   );
-  const moralisUserNftsRef = useRef(moralisUserNfts);
   const handleNftClick = (nft: nftDetails) => {
     setActiveNft(nft);
     playSound(soundsLibrary["on_click_item"]);
@@ -23,7 +22,7 @@ export default function MoralisUserWallet() {
       role="list"
       className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"
     >
-      {moralisUserNftsRef?.current?.map((nft) => (
+      {moralisUserNfts?.map((nft) => (
         <li
           key={nft.tokenHash}
           onClick={() => handleNftClick(nft)}
@@ -41,7 +40,7 @@ export default function MoralisUserWallet() {
                 group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-stone-900 overflow-hidden relative`}
           >
             <img
-              src={nft.image?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+              src={nft?.image?.originalUrl}
               alt=""
               className={`
                 ${
@@ -53,7 +52,7 @@ export default function MoralisUserWallet() {
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center group-hover:opacity-100 opacity-0 transition-opacity">
               <div className="text-center">
-                <p className="text-white text-lg">{nft.name}</p>
+                <p className="text-white text-lg">{nft?.collection?.name}</p>
                 <p className="text-white text-sm">{"#" + nft.tokenId}</p>
               </div>
             </div>
@@ -63,10 +62,15 @@ export default function MoralisUserWallet() {
             ></button>
           </div>
           <p className="mt-2 block text-sm font-medium text-stone-400 truncate pointer-events-none">
-            {nft.floor_price?.toFixed(2)} MATIC
+            {nft?.contract?.openSeaMetadata?.floorPrice?.toFixed(2)} MATIC
           </p>
         </li>
       ))}
+      {moralisUserNfts?.length == 0 && (
+        <p className="mt-2 block text-sm font-medium text-stone-400 pointer-events-none">
+          There are no NFTs in your wallet.
+        </p>
+      )}
     </ul>
   );
 }

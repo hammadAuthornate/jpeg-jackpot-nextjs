@@ -34,13 +34,17 @@ export default function CurrentPotDetails() {
                         ? "border-black-600"
                         : "border-gray-300"
                     } `}
-                    src={nft.image.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                    src={nft?.image?.originalUrl}
                     alt=""
                   />
                 </div>
                 <div className="ml-3 flex-grow bg-stone-900">
                   <p className="text-sm font-medium text-stone-400 truncate">
-                    {(nft.name ? nft.name : nft.meta_name) + "#" + nft.tokenId}
+                    {(nft?.collection?.name
+                      ? nft?.collection?.name
+                      : nft?.collection?.slug) +
+                      "#" +
+                      nft.tokenId}
                   </p>
                   <p className="text-sm text-stone-600">
                     {new Date(nft.timestamp).toLocaleString()} | Current owner:{" "}
@@ -55,7 +59,8 @@ export default function CurrentPotDetails() {
                         : "text-amber-600"
                     }`}
                   >
-                    {nft.floor_price.toFixed(2) + " MATIC"}
+                    {nft?.contract?.openSeaMetadata?.floorPrice?.toFixed(2) +
+                      " MATIC"}
                   </p>
                 </div>
               </li>

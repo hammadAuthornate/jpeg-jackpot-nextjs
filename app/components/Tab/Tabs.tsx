@@ -27,23 +27,26 @@ export default function Tabs() {
 
   //function for nested tab render
   const handleTabClick = (index: number) => {
+    if (!index) return;
     setTabs(
       tabs.map((tab, i) => ({
         ...tab,
-        current: i === index,
+        current: i === index - 1,
       }))
     );
     switch (index) {
       case 0:
-        setActiveNft(moralisUserNfts[0]);
+        if (moralisUserNfts?.length > 0) setActiveNft(moralisUserNfts[0]);
         break;
       case 1:
-        setActiveNft(firebaseUserNfts[0]);
+        if (firebaseUserNfts?.length > 0) setActiveNft(firebaseUserNfts[0]);
         break;
       case 2:
-        setActiveNft(firebaseJackpotNfts[0]);
+        if (firebaseJackpotNfts?.length > 0)
+          setActiveNft(firebaseJackpotNfts[0]);
         break;
       default:
+        if (moralisUserNfts?.length > 0) setActiveNft(moralisUserNfts[0]);
         break;
     }
   };
@@ -53,7 +56,7 @@ export default function Tabs() {
         <a
           key={tab.name}
           href={tab.href}
-          onClick={() => handleTabClick(index)}
+          onClick={() => handleTabClick(index + 1)}
           aria-current={tab.current ? "page" : undefined}
           className={`${
             tab.current

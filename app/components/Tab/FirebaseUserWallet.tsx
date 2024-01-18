@@ -40,7 +40,7 @@ export default function FirebaseUserWallet() {
                group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 overflow-hidden relative`}
           >
             <img
-              src={nft.image?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+              src={nft?.image?.originalUrl}
               alt=""
               className={`
                 ${
@@ -52,7 +52,7 @@ export default function FirebaseUserWallet() {
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center group-hover:opacity-100 opacity-0 transition-opacity">
               <div className="text-center">
-                <p className="text-white text-lg">{nft.name}</p>
+                <p className="text-white text-lg">{nft?.collection?.name}</p>
                 <p className="text-white text-sm">{"#" + nft.tokenId}</p>
               </div>
             </div>
@@ -62,10 +62,15 @@ export default function FirebaseUserWallet() {
             ></button>
           </div>
           <p className="mt-2 block text-sm font-medium text-stone-400 truncate pointer-events-none">
-            {nft.floor_price?.toFixed(2)} MATIC
+            {nft?.contract?.openSeaMetadata?.floorPrice?.toFixed(2)} MATIC
           </p>
         </li>
       ))}
+      {firebaseUserNfts?.length == 0 && (
+        <p className="mt-2 block text-sm font-medium text-stone-400  pointer-events-none">
+          No Nfts set into jackpot
+        </p>
+      )}
     </ul>
   );
 }

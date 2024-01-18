@@ -20,10 +20,7 @@ export default function ActiveNftMoralisWallet() {
           <div>
             <div className="block w-full aspect-w-10 aspect-h-7 rounded-lg overflow-hidden">
               <img
-                src={activeNft.image?.replace(
-                  "ipfs://",
-                  "https://ipfs.io/ipfs/"
-                )}
+                src={activeNft?.image?.originalUrl}
                 alt=""
                 className="object-cover"
               />
@@ -31,7 +28,9 @@ export default function ActiveNftMoralisWallet() {
             <div className="mt-4 flex items-start justify-between">
               <div>
                 <h2 className="text-lg font-medium text-stone-400">
-                  {(activeNft.name ? activeNft.name : activeNft.name2) +
+                  {(activeNft?.collection?.name
+                    ? activeNft?.collection?.name
+                    : activeNft?.collection?.slug) +
                     " #" +
                     activeNft.tokenId}
                 </h2>
@@ -46,13 +45,16 @@ export default function ActiveNftMoralisWallet() {
             <h3 className="font-medium text-stone-400">price</h3>
             <dl className="mt-2 border-t border-stone-800 divide-y divide-stone-100">
               <div
-                key={activeNft.token_uri}
+                key={activeNft.tokenUri}
                 className="py-3 text-sm font-medium"
               >
                 <div className="flex justify-between">
                   <dt className="text-stone-500">opensea floor price</dt>
                   <dd className="text-stone-600 text-right">
-                    {activeNft.floor_price?.toFixed(2)} MATIC
+                    {activeNft?.contract?.openSeaMetadata?.floorPrice?.toFixed(
+                      2
+                    )}{" "}
+                    MATIC
                   </dd>
                 </div>
                 <div className="flex justify-between">
@@ -71,7 +73,7 @@ export default function ActiveNftMoralisWallet() {
             </dl>
             <h3 className="mt-2 font-medium text-stone-400">attributes</h3>
             <dl className="mt-2 border-t border-b border-stone-500 divide-y divide-grey-100">
-              {activeNft.attributes?.map((attr) => (
+              {activeNft?.raw?.metadata?.attributes?.map((attr) => (
                 <div
                   key={attr.trait_type}
                   className="py-3 flex justify-between text-sm font-medium"
